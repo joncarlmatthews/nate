@@ -45,7 +45,7 @@ int main(int argc, const char * argv[])
         [task setLaunchPath: @"/usr/bin/mdls"];
         
         // Create the task's arguments (single file path argument in this case).
-        NSArray *arguments = [NSArray arrayWithObjects: @"/Users/joncarlmatthews/Music/testmp3s/City Soul Project-Ah Shucks (Original Mix) -www.mrtzcmp3.net.mp3", nil];
+        NSArray *arguments = [NSArray arrayWithObjects: @"/Users/joncarlmatthews/Music/JM/CLUB/X-Press 2 - Lazy (Original Mix).mp3", nil];
         [task setArguments: arguments];
         
         // Create the pipe object for data transfer from mdls.
@@ -121,9 +121,19 @@ int main(int argc, const char * argv[])
                             bitRateableFilesFound++;
                             
                             // Substring the matched line with the range of the regex.
-                            NSString *bitRateValue = [mdlsLine substringWithRange:rangeOfFirstMatch];
+                            NSString *fullBitRateValue = [mdlsLine substringWithRange:rangeOfFirstMatch];
                             
-                            NSString *bitRate = [NSString stringWithFormat:@" Bit Rate: %@kbps", bitRateValue];
+                            // Strip trailing zeros.
+                            NSError *error = nil;
+                            NSRegularExpression *regex = [NSRegularExpression regularExpressionWithPattern:@"[0]+$"
+                                                                                options:NSRegularExpressionCaseInsensitive
+                                                                                error:&error];
+                            NSString *formattedBitRateValue = [regex stringByReplacingMatchesInString:fullBitRateValue
+                                                                                options:0
+                                                                                range:NSMakeRange(0, [fullBitRateValue length])
+                                                                                withTemplate:@""];
+                            
+                            NSString *bitRate = [NSString stringWithFormat:@" Bit Rate: %@kbps", formattedBitRateValue];
                             
                             [result appendString:bitRate];
                             
