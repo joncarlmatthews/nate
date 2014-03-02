@@ -45,7 +45,7 @@ int main(int argc, const char * argv[])
         [task setLaunchPath: @"/usr/bin/mdls"];
         
         // Create the task's arguments (single file path argument in this case).
-        NSArray *arguments = [NSArray arrayWithObjects: @"/Users/joncarlmatthews/Music/testmp3s/Eminem - Rap God (Explicit).mp3", nil];
+        NSArray *arguments = [NSArray arrayWithObjects: @"/Users/joncarlmatthews/Music/testmp3s/City Soul Project-Ah Shucks (Original Mix) -www.mrtzcmp3.net.mp3", nil];
         [task setArguments: arguments];
         
         // Create the pipe object for data transfer from mdls.
@@ -149,6 +149,7 @@ int main(int argc, const char * argv[])
         
         // Output the result.
         printf([result UTF8String]);
+        printf("\n");
         
         if (0 == bitRateableFilesFound){
             printf("No audio files found in /path ");
