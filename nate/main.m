@@ -30,7 +30,7 @@ int main(int argc, const char * argv[])
             exit(1);
         }
         
-        // All of the code needs to be in a method that the file recursion will use...
+        // All of this code needs to be in a method that the file recursion will use...
         
         // Total number of valid files found.
         unsigned bitRateableFilesFound = 0;
@@ -138,7 +138,7 @@ int main(int argc, const char * argv[])
             } // for
             
             if (!bitRateFound){
-                [result appendString:@"Bit Rate not found"];
+                [result appendString:@" Bit Rate not found"];
             }
             
         }@catch (NSException *e) {
