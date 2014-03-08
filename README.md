@@ -32,7 +32,12 @@ It's a good idea to dump the output into a text file:
 	$ ./nate ~/Music/ > bitrates.txt
 	
 ## TODO
-Support files as well as directories
+ - Add build to version control
+ - Support files as well as directories.
+ - Add threshold parameter.
+ - Colour output.
+ - Check behaviour on empty directories.
+ - Checout 0 bit rates found output.
 
 ### Note
 Currently only supports .wav and .mp3
