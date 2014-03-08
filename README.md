@@ -1,6 +1,6 @@
 # nate v0.1
 
-proof is a little command line utility for finding audio file Bit Rates
+nate is a little command line utility for finding audio file Bit Rates
 
 Written by: [Jon Matthews](https://github.com/joncarlmatthews)
 
