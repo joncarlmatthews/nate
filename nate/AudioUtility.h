@@ -10,4 +10,6 @@
 
 @interface AudioUtility : NSObject
 
+-(NSString *)calculateBitRateOfURL:(NSURL *)url error:(NSError **)error;
+
 @end
