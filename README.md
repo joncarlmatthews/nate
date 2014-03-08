@@ -1,6 +1,6 @@
 # nate v0.1
 
-nate is a little command line utility for finding audio file Bit Rates
+nate is a command line utility for finding audio file Bit Rates. It will recursively look through a given directory and output a bit rate value for each audio file found. It's primary purpose is to discover audio files below a certain quality.
 
 Written by: [Jon Matthews](https://github.com/joncarlmatthews)
 
