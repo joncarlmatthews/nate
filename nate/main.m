@@ -24,6 +24,18 @@ int main(int argc, const char * argv[])
         
         AudioUtility *au = [[AudioUtility alloc] init];
         
+        NSError *error = nil;
+        [au performPrerequisiteCheckWithError: &error];
+        
+        if (error != nil){
+            printf([[error localizedDescription] UTF8String]);
+            printf("\n");
+            exit(2);
+        }
+        
+        // Total number of valid files found.
+        unsigned bitRateableFilesFound = 0;
+        
         NSFileManager *fileManager = [[NSFileManager alloc] init];
         NSURL *directoryURL = [NSURL URLWithString:[NSString stringWithUTF8String:argv[1]]];
         NSArray *keys = [NSArray arrayWithObject:NSURLIsDirectoryKey];
@@ -78,8 +90,11 @@ int main(int argc, const char * argv[])
                         printf([[bitRateError localizedDescription] UTF8String]);
                         
                     }else{
+                        
                         printf(" ");
                         printf([bitRate UTF8String]);
+                        
+                        bitRateableFilesFound++;
                     }
                     
                     
@@ -87,6 +102,12 @@ int main(int argc, const char * argv[])
                 }
                 
             }
+        } // for
+        
+        if (0 == bitRateableFilesFound){
+            printf("No audio files found in %s", argv[1]);
+            printf("\n");
+            exit(3);
         }
     }
     

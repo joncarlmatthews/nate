@@ -12,51 +12,36 @@
 
 -(bool)performPrerequisiteCheckWithError:(NSError **)error
 {
-    /*
-     
      // Test task call to see if the utility is at our disposal
      // before we enter into potential recursion.
      NSTask *testTask = [[NSTask alloc] init];
      [testTask setLaunchPath: @"/usr/bin/mdls"];
      [testTask setArguments: [NSArray arrayWithObjects: NSHomeDirectory(), nil]];
+    
      NSPipe *testPipe = [[NSPipe alloc] init];
      [testTask setStandardOutput: testPipe];
      
      // Perform test
      @try {
-     [testTask launch];
+         [testTask launch];
      }@catch (NSException *e) {
-     NSString *error = [NSString stringWithFormat:@"[error] cannot load metadata tool (%@)", [e description]];
-     printf([error UTF8String]);
-     exit(1);
+         
+         NSString *errorMsg = [NSString stringWithFormat:@"[error] cannot load metadata tool (%@)", [e description]];
+         
+         NSMutableDictionary *errorInfo = [[NSMutableDictionary alloc] init];
+         [errorInfo setValue:errorMsg forKey:NSLocalizedDescriptionKey];
+         
+         *error = [[NSError alloc] initWithDomain:@"nate.joncarlmatthews.com"
+                                             code:1
+                                         userInfo:errorInfo];
+         return nil;
      }
-     
-     // All of this code needs to be in a method that the file recursion will use...
-     
-     // Total number of valid files found.
-     unsigned bitRateableFilesFound = 0;
-     
-     // Was the loop's bit rate found?
-     bool bitRateFound = false;
-     
-     
-     
-     // Output the result.
-     printf([result UTF8String]);
-     printf("\n");
-     
-     if (0 == bitRateableFilesFound){
-     printf("No audio files found in /path ");
-     }
-     
-     */
     
     return true;
 }
 
 -(NSString *)calculateBitRateOfURL:(NSURL *)url error:(NSError **)error
 {
-
     // Check the type of URL.
     if (![url isFileURL]){
         
