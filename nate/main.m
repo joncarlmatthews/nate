@@ -14,6 +14,9 @@ int main(int argc, const char * argv[])
 
     @autoreleasepool {
         
+        // Binary location:
+        //NSLog(@"%s", argv[0]);
+        
         if (argc <= 1) {
             
             // Output usage.
@@ -36,78 +39,113 @@ int main(int argc, const char * argv[])
         // Total number of valid files found.
         unsigned bitRateableFilesFound = 0;
         
+        // Get the file path.
+        NSString *filePath = [NSString stringWithUTF8String:argv[1]];
+        
+        // Create instance of NSFileManager for working with the file path.
         NSFileManager *fileManager = [[NSFileManager alloc] init];
-        NSURL *directoryURL = [NSURL URLWithString:[NSString stringWithUTF8String:argv[1]]];
-        NSArray *keys = [NSArray arrayWithObject:NSURLIsDirectoryKey];
         
-        NSDirectoryEnumerator *enumerator = [fileManager
-                                             enumeratorAtURL:directoryURL
-                                             includingPropertiesForKeys:keys
-                                             options:0
-                                             errorHandler:^(NSURL *url, NSError *error) {
-                                                 // Handle the error.
-                                                 // Return YES if the enumeration should continue after the error.
-                                                 return YES;
-                                             }];
+        // Does something exist at the location passed in?
+        if (![fileManager fileExistsAtPath:filePath]) {
+            printf("[error] no file or folder at that location found");
+            printf("\n");
+            exit(3);
+        }
         
-        for (NSURL *url in enumerator) { 
-            NSError *error;
-            NSNumber *isDirectory = nil;
-            if (! [url getResourceValue:&isDirectory forKey:NSURLIsDirectoryKey error:&error]) {
-                // handle error
-            }else if(! [isDirectory boolValue]) {
+        NSString *fileType = nil;
+        
+        NSDictionary *attributes = [fileManager attributesOfItemAtPath:filePath error:nil];
+        fileType = attributes[NSFileType];
+        
+        if ([fileType isEqualToString:@"NSFileTypeDirectory"]){
+            
+            // Create a NSURL instance from the file path string.
+            NSURL *directoryURL = [NSURL URLWithString:filePath];
+            
+            // Keys for then enumerator.
+            NSArray *keys = [NSArray arrayWithObject:NSURLIsDirectoryKey];
+            
+            // Enumerator for looping recursively over the given directory.
+            NSDirectoryEnumerator *enumerator = [fileManager
+                                                 enumeratorAtURL:directoryURL
+                                                 includingPropertiesForKeys:keys
+                                                 options:0
+                                                 errorHandler:^(NSURL *url, NSError *error) {
+                                                     // Handle the error.
+                                                     // Return YES if the enumeration should continue after the error.
+                                                     return YES;
+                                                 }];
+            
+            for (NSURL *url in enumerator) {
                 
-                // No error and it’s not a directory...
+                NSError *error;
+                NSNumber *isDirectory = nil;
                 
-                // Get the file path
-                NSString *filePath = [[url path] copy];
-                
-                // Audio file regex.
-                NSError *fnRegexError = nil;
-                NSRegularExpression *fnRegex = [NSRegularExpression regularExpressionWithPattern:@"(.mp3|.wav)$"
-                                                                                          options:NSRegularExpressionCaseInsensitive
-                                                                                            error:&fnRegexError];
-                
-                // Perform the expression using the match count method.
-                NSUInteger fnRegexMatchCount = [fnRegex numberOfMatchesInString:filePath
-                                                                          options:0
-                                                                            range:NSMakeRange(0, [filePath length])];
-                
-                if (1 == fnRegexMatchCount){
+                if (! [url getResourceValue:&isDirectory forKey:NSURLIsDirectoryKey error:&error]) {
                     
-                    NSMutableString *result = [[NSMutableString alloc] initWithString:filePath];
+                    // handle error?
                     
-                    // Lookup Bit Rate.
-                    NSError *bitRateError = nil;
+                }else if(! [isDirectory boolValue]) {
                     
-                    NSString *bitRate = [NSString stringWithFormat:@" Bit Rate: %@kbps", [au calculateBitRateOfURL: url error:&bitRateError]];
+                    // No error and it’s not a directory...
                     
-                    printf([result UTF8String]);
+                    // Get the file path
+                    NSString *filePath = [[url path] copy];
                     
-                    if (nil != bitRateError){
+                    // Audio file regex.
+                    NSError *fnRegexError = nil;
+                    NSRegularExpression *fnRegex = [NSRegularExpression regularExpressionWithPattern:@"(.mp3|.wav|.wma|.mid)$"
+                                                                                             options:NSRegularExpressionCaseInsensitive
+                                                                                               error:&fnRegexError];
+                    
+                    // Perform the expression using the match count method.
+                    NSUInteger fnRegexMatchCount = [fnRegex numberOfMatchesInString:filePath
+                                                                            options:0
+                                                                              range:NSMakeRange(0, [filePath length])];
+                    
+                    if (1 == fnRegexMatchCount){
                         
-                        printf(" ");
-                        printf([[bitRateError localizedDescription] UTF8String]);
+                        // Lookup Bit Rate.
+                        NSError *bitRateError = nil;
                         
-                    }else{
+                        NSString *bitRate = [NSString stringWithFormat:@" Bit Rate: %@kbps", [au calculateBitRateOfURL: url error:&bitRateError]];
                         
-                        printf(" ");
-                        printf([bitRate UTF8String]);
+                        printf([filePath UTF8String]);
                         
-                        bitRateableFilesFound++;
+                        if (nil != bitRateError){
+                            
+                            printf(" ");
+                            printf([[bitRateError localizedDescription] UTF8String]);
+                            
+                        }else{
+                            
+                            printf(" ");
+                            printf([bitRate UTF8String]);
+                            
+                            bitRateableFilesFound++;
+                        }
+                        
+                        
+                        printf("\n");
                     }
                     
-                    
-                    printf("\n");
                 }
                 
-            }
-        } // for
+            } // for
+            
+        }else {
+            
+            // Assume NSFileTypeRegular
+            printf("file");
+            exit(10);
+        }
+        
+        
         
         if (0 == bitRateableFilesFound){
             printf("No audio files found in %s", argv[1]);
             printf("\n");
-            exit(3);
+            exit(4);
         }
     }
     
