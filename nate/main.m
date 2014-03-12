@@ -143,20 +143,23 @@ void printBitRate(AudioUtility *au, NSURL *url, unsigned *bitRateableFilesFound,
         // Lookup Bit Rate.
         NSError *bitRateError = nil;
         
-        NSString *bitRate = [NSString stringWithFormat:@" Bit Rate: %@kbps", [au calculateBitRateOfURL:url error:&bitRateError]];
+        NSString *bitRate = [NSString stringWithFormat:@"Bit Rate: %@kbps", [au calculateBitRateOfURL:url error:&bitRateError]];
         
         if (printFilePath){
             printf([filePath UTF8String]);
+            printf(" ");
         }
         
         if (nil != bitRateError){
             
-            printf(" ");
+            if (printFilePath){
+                printf(" ");
+            }
+            
             printf([[bitRateError localizedDescription] UTF8String]);
             
         }else{
-            
-            printf(" ");
+        
             printf([bitRate UTF8String]);
             
             // Dereference counter variable.
