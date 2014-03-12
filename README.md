@@ -16,7 +16,13 @@ Date: 08/03/2014
 
 ## Usage
 
-````usage: nate [directory/to/search]````
+````usage: nate [file or directory/to/search]````
+
+````$ ./nate myfile.mp3````
+
+Example output:
+
+	Bit Rate: 320kbps
 
 ````$ ./nate ~/Music/````
 
@@ -33,11 +39,7 @@ It's a good idea to dump the output into a text file:
 	
 ## TODO
  - Add build to version control
- - Support files as well as directories.
  - Add threshold parameter.
- - Colour output.
- - Check behaviour on empty directories.
- - Checout 0 bit rates found output.
 
 ### Note
 Currently only supports .wav and .mp3
