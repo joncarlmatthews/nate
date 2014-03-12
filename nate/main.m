@@ -9,6 +9,9 @@
 #import <Foundation/Foundation.h>
 #import "AudioUtility.h"
 
+// Prototype for printBitRate method
+void printBitRate(AudioUtility *au, NSURL *url, unsigned *bitRateableFilesFound, bool printFilePath);
+
 int main(int argc, const char * argv[])
 {
 
@@ -88,67 +91,80 @@ int main(int argc, const char * argv[])
                 }else if(! [isDirectory boolValue]) {
                     
                     // No error and it’s not a directory...
-                    
-                    // Get the file path
-                    NSString *filePath = [[url path] copy];
-                    
-                    // Audio file regex.
-                    NSError *fnRegexError = nil;
-                    NSRegularExpression *fnRegex = [NSRegularExpression regularExpressionWithPattern:@"(.mp3|.wav|.wma|.mid)$"
-                                                                                             options:NSRegularExpressionCaseInsensitive
-                                                                                               error:&fnRegexError];
-                    
-                    // Perform the expression using the match count method.
-                    NSUInteger fnRegexMatchCount = [fnRegex numberOfMatchesInString:filePath
-                                                                            options:0
-                                                                              range:NSMakeRange(0, [filePath length])];
-                    
-                    if (1 == fnRegexMatchCount){
-                        
-                        // Lookup Bit Rate.
-                        NSError *bitRateError = nil;
-                        
-                        NSString *bitRate = [NSString stringWithFormat:@" Bit Rate: %@kbps", [au calculateBitRateOfURL: url error:&bitRateError]];
-                        
-                        printf([filePath UTF8String]);
-                        
-                        if (nil != bitRateError){
-                            
-                            printf(" ");
-                            printf([[bitRateError localizedDescription] UTF8String]);
-                            
-                        }else{
-                            
-                            printf(" ");
-                            printf([bitRate UTF8String]);
-                            
-                            bitRateableFilesFound++;
-                        }
-                        
-                        
-                        printf("\n");
-                    }
-                    
+                    // Output the file's bit rate.
+                    printBitRate(au, url, &bitRateableFilesFound, true);
+
                 }
                 
-            } // for
+            }
             
-        }else {
+        }else if ([fileType isEqualToString:@"NSFileTypeRegular"]){
             
-            // Assume NSFileTypeRegular
-            printf("file");
-            exit(10);
+            // Create an NSURL instance from the file path
+            NSURL *fileUrl = [[NSURL alloc] initFileURLWithPath:filePath isDirectory: NO];
+            
+            // Output the file's bit rate.
+            printBitRate(au, fileUrl, &bitRateableFilesFound, false);
+            
+        }else{
+            
+            // Unsupported
         }
-        
-        
         
         if (0 == bitRateableFilesFound){
             printf("No audio files found in %s", argv[1]);
             printf("\n");
             exit(4);
         }
+        
     }
     
     return 0;
+}
+
+void printBitRate(AudioUtility *au, NSURL *url, unsigned *bitRateableFilesFound, bool printFilePath)
+{
+    // Get the file path
+    NSString *filePath = [[url path] copy];
+    
+    // Audio file regex.
+    NSError *fnRegexError = nil;
+    NSRegularExpression *fnRegex = [NSRegularExpression regularExpressionWithPattern:@"(.mp3|.wav|.wma|.mid)$"
+                                                                             options:NSRegularExpressionCaseInsensitive
+                                                                               error:&fnRegexError];
+    
+    // Perform the expression using the match count method.
+    NSUInteger fnRegexMatchCount = [fnRegex numberOfMatchesInString:filePath
+                                                            options:0
+                                                              range:NSMakeRange(0, [filePath length])];
+    
+    if (1 == fnRegexMatchCount){
+        
+        // Lookup Bit Rate.
+        NSError *bitRateError = nil;
+        
+        NSString *bitRate = [NSString stringWithFormat:@" Bit Rate: %@kbps", [au calculateBitRateOfURL:url error:&bitRateError]];
+        
+        if (printFilePath){
+            printf([filePath UTF8String]);
+        }
+        
+        if (nil != bitRateError){
+            
+            printf(" ");
+            printf([[bitRateError localizedDescription] UTF8String]);
+            
+        }else{
+            
+            printf(" ");
+            printf([bitRate UTF8String]);
+            
+            // Dereference counter variable.
+            *bitRateableFilesFound = (*bitRateableFilesFound + 1);
+        }
+        
+        
+        printf("\n");
+    }
 }
 

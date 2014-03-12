@@ -42,7 +42,7 @@
 
 -(NSString *)calculateBitRateOfURL:(NSURL *)url error:(NSError **)error
 {
-    // Check the type of URL.
+    // Check the type of URL.    
     if (![url isFileURL]){
         
         NSMutableDictionary *errorInfo = [[NSMutableDictionary alloc] init];
