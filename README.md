@@ -38,7 +38,6 @@ It's a good idea to dump the output into a text file:
 	$ ./nate ~/Music/ > bitrates.txt
 	
 ## TODO
- - Add build to version control
  - Add threshold parameter.
 
 ### Note
