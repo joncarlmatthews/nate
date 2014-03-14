@@ -181,7 +181,7 @@ void printBitRate(AudioUtility *au,
                 
                 NSNumber *bitRateNumber = [[NSNumber alloc] initWithInteger:[bitRateStrValue integerValue]];
                 
-                if ([bitRateNumber isGreaterThan:maximumBitRate]){
+                if ([bitRateNumber isGreaterThanOrEqualTo:maximumBitRate]){
                     skip = true;
                 }
                 
