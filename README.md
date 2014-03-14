@@ -46,4 +46,4 @@ It's a good idea to dump the output into a text file:
 	$ ./nate ~/Music/ > bitrates.txt
 
 ### Note
-Currently only supports .wav and .mp3
+Currently only supports .wav and .mp3 and binary has only been tested on OSX 10.9.2
