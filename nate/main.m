@@ -10,7 +10,11 @@
 #import "AudioUtility.h"
 
 // Prototype for printBitRate method
-void printBitRate(AudioUtility *au, NSURL *url, unsigned *bitRateableFilesFound, bool printFilePath);
+void printBitRate(AudioUtility *au,
+                    NSURL *url,
+                    unsigned *bitRateableFilesFound,
+                    bool printFilePath,
+                    NSNumber *maximumBitRate);
 
 int main(int argc, const char * argv[])
 {
@@ -23,9 +27,26 @@ int main(int argc, const char * argv[])
         if (argc <= 1) {
             
             // Output usage.
-            printf("usage: nate [directory to search]\n");
+            printf("usage: nate directory_or_file_path [maximum bit rate]\n");
             
             exit(1);
+        }
+        
+        if (argc >= 4){
+            
+            // Output usage.
+            printf("[error] invalid number of parameters supplied\n");
+            printf("usage: nate directory_or_file_path [maximum bit rate]\n");
+            
+            exit(1);
+        }
+        
+        // Maximum bit rate parameter
+        NSNumber *maximumBitRate = nil;
+        
+        if (3 == argc){
+            NSString *maximumBitRateStringValue = [[NSString alloc] initWithUTF8String:argv[2]];
+            maximumBitRate = [[NSNumber alloc] initWithInteger:[maximumBitRateStringValue integerValue]];
         }
         
         AudioUtility *au = [[AudioUtility alloc] init];
@@ -92,7 +113,7 @@ int main(int argc, const char * argv[])
                     
                     // No error and it’s not a directory...
                     // Output the file's bit rate.
-                    printBitRate(au, url, &bitRateableFilesFound, true);
+                    printBitRate(au, url, &bitRateableFilesFound, true, maximumBitRate);
 
                 }
                 
@@ -104,7 +125,7 @@ int main(int argc, const char * argv[])
             NSURL *fileUrl = [[NSURL alloc] initFileURLWithPath:filePath isDirectory: NO];
             
             // Output the file's bit rate.
-            printBitRate(au, fileUrl, &bitRateableFilesFound, false);
+            printBitRate(au, fileUrl, &bitRateableFilesFound, false, maximumBitRate);
             
         }else{
             
@@ -122,7 +143,11 @@ int main(int argc, const char * argv[])
     return 0;
 }
 
-void printBitRate(AudioUtility *au, NSURL *url, unsigned *bitRateableFilesFound, bool printFilePath)
+void printBitRate(AudioUtility *au,
+                    NSURL *url,
+                    unsigned *bitRateableFilesFound,
+                    bool printFilePath,
+                    NSNumber *maximumBitRate)
 {
     // Get the file path
     NSString *filePath = [[url path] copy];
@@ -140,34 +165,61 @@ void printBitRate(AudioUtility *au, NSURL *url, unsigned *bitRateableFilesFound,
     
     if (1 == fnRegexMatchCount){
         
-        // Lookup Bit Rate.
+        // Lookup Bit Rate...
+        
+        // Bit rate error class.
         NSError *bitRateError = nil;
         
-        NSString *bitRate = [NSString stringWithFormat:@"Bit Rate: %@kbps", [au calculateBitRateOfURL:url error:&bitRateError]];
+        // Bit rate as string value.
+        NSString *bitRateStrValue = [au calculateBitRateOfURL:url error:&bitRateError];
         
-        if (printFilePath){
-            printf([filePath UTF8String]);
-            printf(" ");
+        bool skip = false;
+        
+        if (nil != maximumBitRate){
+
+            if ([maximumBitRate isGreaterThan:[NSNumber numberWithInt:0]]){
+                
+                NSNumber *bitRateNumber = [[NSNumber alloc] initWithInteger:[bitRateStrValue integerValue]];
+                
+                if ([bitRateNumber isGreaterThan:maximumBitRate]){
+                    skip = true;
+                }
+                
+            }
         }
         
-        if (nil != bitRateError){
-            
+        if (!skip){
+        
             if (printFilePath){
+                printf([filePath UTF8String]);
                 printf(" ");
             }
             
-            printf([[bitRateError localizedDescription] UTF8String]);
+            if (nil == bitRateError){
+                
+                
+                
+                NSString *bitRateText = [NSString stringWithFormat:@"Bit Rate: %@kbps", bitRateStrValue];
+                
+                printf([bitRateText UTF8String]);
+                
+                // Dereference counter variable.
+                *bitRateableFilesFound = (*bitRateableFilesFound + 1);
+                
+            }else{
+                
+                if (printFilePath){
+                    printf(" ");
+                }
+                
+                printf([[bitRateError localizedDescription] UTF8String]);
+                
+            }
             
-        }else{
-        
-            printf([bitRate UTF8String]);
             
-            // Dereference counter variable.
-            *bitRateableFilesFound = (*bitRateableFilesFound + 1);
+            printf("\n");
+            
         }
-        
-        
-        printf("\n");
     }
 }
 
