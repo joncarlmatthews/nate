@@ -16,7 +16,7 @@ Date: 08/03/2014
 
 ## Usage
 
-````usage: nate [file or directory/to/search]````
+````usage: nate directory_or_file_path [quality (only find audio files below this KBPS value)]````
 
 ````$ ./nate myfile.mp3````
 
@@ -32,13 +32,18 @@ Example output:
 	/Users/<username>/Music/file2.mp3 Bit Rate: 127kbps
 	/Users/<username>/Music/iTunes/file3.mp3 Bit Rate: 127kbps
 	...
+	
+````$ ./nate ~/Music/ 320````
+
+Example output:
+
+	/Users/<username>/Music/file2.mp3 Bit Rate: 127kbps
+	/Users/<username>/Music/iTunes/file3.mp3 Bit Rate: 127kbps
+	...
 
 It's a good idea to dump the output into a text file:
 
 	$ ./nate ~/Music/ > bitrates.txt
-	
-## TODO
- - Add threshold parameter.
 
 ### Note
-Currently only supports .wav and .mp3
+Currently only supports .wav and .mp3 and binary has only been tested on OSX 10.9.2
