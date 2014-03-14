@@ -16,7 +16,7 @@ Date: 08/03/2014
 
 ## Usage
 
-````usage: nate directory_or_file_path [bit rate (only find audio files below this KBPS value)]````
+````usage: nate directory_or_file_path [quality (only find audio files below this KBPS value)]````
 
 ````$ ./nate myfile.mp3````
 
