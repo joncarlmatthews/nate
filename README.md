@@ -18,28 +18,30 @@ Date: 08/03/2014
 
 ````usage: nate directory_or_file_path [quality (only find audio files below this KBPS value)]````
 
-````$ nate myfile.mp3````
+### Single file
 
-Example output:
+```
+$ nate myfile.mp3
+Bit Rate: 320kbps
+```
 
-	Bit Rate: 320kbps
+### Multi file
 
-````$ nate ~/Music/````
+```
+$ nate ~/Music/
+/Users/<username>/Music/file.mp3 Bit Rate: 320kbps
+/Users/<username>/Music/file2.mp3 Bit Rate: 127kbps
+/Users/<username>/Music/iTunes/file3.mp3 Bit Rate: 127kbps
+```
 
-Example output:
+### Quality threshold
 
-	/Users/<username>/Music/file.mp3 Bit Rate: 320kbps
-	/Users/<username>/Music/file2.mp3 Bit Rate: 127kbps
-	/Users/<username>/Music/iTunes/file3.mp3 Bit Rate: 127kbps
-	...
-	
-````$ nate ~/Music/ 320````
-
-Example output:
-
-	/Users/<username>/Music/file2.mp3 Bit Rate: 127kbps
-	/Users/<username>/Music/iTunes/file3.mp3 Bit Rate: 127kbps
-	...
+```
+$ nate ~/Music/ 320
+/Users/<username>/Music/file2.mp3 Bit Rate: 127kbps
+/Users/<username>/Music/iTunes/file3.mp3 Bit Rate: 127kbps
+...
+```
 
 It's a good idea to dump the output into a text file:
 
