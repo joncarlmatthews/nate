@@ -22,7 +22,7 @@ int main(int argc, const char * argv[])
     @autoreleasepool {
         
         // Binary location:
-        //NSLog(@"%s", argv[0]);
+        NSLog(@"%s", argv[0]);
         
         if (argc <= 1) {
             
@@ -154,7 +154,7 @@ void printBitRate(AudioUtility *au,
     
     // Audio file regex.
     NSError *fnRegexError = nil;
-    NSRegularExpression *fnRegex = [NSRegularExpression regularExpressionWithPattern:@"(.mp3|.wav|.wma|.mid)$"
+    NSRegularExpression *fnRegex = [NSRegularExpression regularExpressionWithPattern:@"(.mp3|.wav|.wma|.mid|.m4a)$"
                                                                              options:NSRegularExpressionCaseInsensitive
                                                                                error:&fnRegexError];
     
@@ -197,9 +197,7 @@ void printBitRate(AudioUtility *au,
             
             if (nil == bitRateError){
                 
-                
-                
-                NSString *bitRateText = [NSString stringWithFormat:@"Bit Rate: %@kbps", bitRateStrValue];
+                NSString *bitRateText = [NSString stringWithFormat:@"Bit Rate: %@kbps", [bitRateStrValue substringToIndex:3]];
                 
                 printf([bitRateText UTF8String]);
                 

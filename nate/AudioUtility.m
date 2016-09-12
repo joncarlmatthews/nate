@@ -138,17 +138,7 @@
                         // Substring the matched line with the range of the regex.
                         NSString *fullBitRateValue = [mdlsLine substringWithRange:rangeOfFirstMatch];
                         
-                        // Strip trailing zeros.
-                        NSError *error = nil;
-                        NSRegularExpression *regex = [NSRegularExpression regularExpressionWithPattern:@"[0]{0,3}$"
-                                                                                               options:NSRegularExpressionCaseInsensitive
-                                                                                                 error:&error];
-                        NSString *formattedBitRateValue = [regex stringByReplacingMatchesInString:fullBitRateValue
-                                                                                          options:0
-                                                                                            range:NSMakeRange(0, [fullBitRateValue length])
-                                                                                     withTemplate:@""];
-                        
-                        return formattedBitRateValue;
+                        return fullBitRateValue;
                         
                     }
                 }
