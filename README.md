@@ -18,13 +18,13 @@ Date: 08/03/2014
 
 ````usage: nate directory_or_file_path [quality (only find audio files below this KBPS value)]````
 
-````$ ./nate myfile.mp3````
+````$ nate myfile.mp3````
 
 Example output:
 
 	Bit Rate: 320kbps
 
-````$ ./nate ~/Music/````
+````$ nate ~/Music/````
 
 Example output:
 
@@ -33,7 +33,7 @@ Example output:
 	/Users/<username>/Music/iTunes/file3.mp3 Bit Rate: 127kbps
 	...
 	
-````$ ./nate ~/Music/ 320````
+````$ nate ~/Music/ 320````
 
 Example output:
 
@@ -43,7 +43,7 @@ Example output:
 
 It's a good idea to dump the output into a text file:
 
-	$ ./nate ~/Music/ > bitrates.txt
+	$ nate ~/Music/ > bitrates.txt
 
 ### Audio file support
 
